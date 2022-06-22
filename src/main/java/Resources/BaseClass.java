@@ -14,7 +14,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import PageObjects.EHUBHome;
+import PageObjects.ActivityView;
 import PageObjects.LoginPage;
 import PageObjects.NeosuiteHomePage;
 import PageObjects.generalFunctions;
@@ -24,7 +24,7 @@ public class BaseClass {
 	public WebDriver driver;
 	public LoginPage login;
 	public NeosuiteHomePage neosuite;
-	public EHUBHome hubhome;
+	public ActivityView activityHome;
 	public WebDriverWait wait;
 	public Properties prop;
 	public generalFunctions generalFunction;
@@ -59,7 +59,7 @@ public WebDriver initializeDriver() throws IOException
 	wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 	login = new LoginPage(driver, wait);
 	neosuite = new NeosuiteHomePage(driver,wait);
-	hubhome = new EHUBHome(driver, prop);
+	activityHome = new ActivityView(driver, prop);
 	generalFunction = new generalFunctions(driver,prop);
 	return driver;
 }

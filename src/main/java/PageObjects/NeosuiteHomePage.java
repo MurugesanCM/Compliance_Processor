@@ -14,12 +14,12 @@ public NeosuiteHomePage(WebDriver driver,WebDriverWait wait)
 	this.wait=wait;
 }
 
-By Hub = By.xpath("//div[@title='Hub']");
+By Compliance = By.xpath("//div[@title='Compliance Client']");
 By Popup = By.xpath("//*[@id='toast-container']//div");
-public WebElement OpenEhubApplication()
+public WebElement OpenComplianceApplication()
 {
 	//wait.until(ExpectedConditions.refreshed(ExpectedConditions.stalenessOf(driver.findElement(Hub))));
-	return driver.findElement(Hub);
+	return driver.findElement(Compliance);
 }
 public WebElement popUp()
 {

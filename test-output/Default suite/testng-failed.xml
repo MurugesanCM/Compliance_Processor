@@ -3,11 +3,11 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="EHUB.GHR_CreateEmployee.CreateEmployee_WithduplicateglobalID_Cancel">
+      <class name="compliance_client_compliance_processor.getFilteredDataCount">
         <methods>
-          <include name="createEmployee_WithduplicateglobalID_Cancel"/>
+          <include name="createEmployee"/>
         </methods>
-      </class> <!-- EHUB.GHR_CreateEmployee.CreateEmployee_WithduplicateglobalID_Cancel -->
+      </class> <!-- compliance_client_compliance_processor.getFilteredDataCount -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

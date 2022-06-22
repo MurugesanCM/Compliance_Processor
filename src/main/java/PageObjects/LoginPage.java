@@ -19,6 +19,8 @@ public class LoginPage {
 	By username = By.id("username");
 	By password = By.id("password");
 	By loginButton = By.id("kc-login");
+	By sideBar = By.xpath("//a[@data-target='setting_SideBar_out']");
+	By appRole = By.xpath("//a[@class='collapsible-header']");
 
 	public LoginPage(WebDriver driver, WebDriverWait wait) {
 		// TODO Auto-generated constructor stub
@@ -38,20 +40,21 @@ public class LoginPage {
 	}
 	public void login()
 	{
-		driver.findElement(username).sendKeys("AT0006");
+		driver.findElement(username).sendKeys("106805");
 		driver.findElement(password).sendKeys("Neeyamo@123");
 		driver.findElement(loginButton).click();
 	}
 
-	public void switchToGHRRole() throws InterruptedException {
-		wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//a[@data-target='setting_SideBar_out']"))));
-		driver.findElement(By.xpath("//a[@data-target='setting_SideBar_out']")).click();
-		wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//a[@class='collapsible-header']"))));
-		driver.findElement(By.xpath("//a[@class='collapsible-header']")).click();
-		wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//span[@title='Hub']"))));
-		driver.findElement(By.xpath("//span[@title='Hub']")).click();
-		wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//span[@title='Hub']//parent::div//parent::div[1]//parent::li//child::div[@class='collapsible-body']//div[@class='row']//child::div//child::div//span[@title='Global HR']//parent::div//parent::div//div[2]//label//span[@class='lever']"))));
-		driver.findElement(By.xpath("//span[@title='Hub']//parent::div//parent::div[1]//parent::li//child::div[@class='collapsible-body']//div[@class='row']//child::div//child::div//span[@title='Global HR']//parent::div//parent::div//div[2]//label//span[@class='lever']"))
+	public void switchRole(String appName,String role) throws InterruptedException {
+		wait.until(ExpectedConditions.visibilityOf(driver.findElement(sideBar)));
+		driver.findElement(sideBar).click();
+		wait.until(ExpectedConditions.visibilityOf(driver.findElement(appRole)));
+		driver.findElement(appRole).click();
+		WebElement application = driver.findElement(By.xpath("//span[@title='"+appName+"']"));
+		wait.until(ExpectedConditions.visibilityOf(application));
+		application.click();
+		wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//span[@title='"+appName+"']//parent::div//parent::div[1]//parent::li//child::div[@class='collapsible-body']//div[@class='row']//child::div//child::div//span[@title='"+role+"']//parent::div//parent::div//div[2]//label//span[@class='lever']"))));
+		driver.findElement(By.xpath("//span[@title='"+appName+"']//parent::div//parent::div[1]//parent::li//child::div[@class='collapsible-body']//div[@class='row']//child::div//child::div//span[@title='"+role+"']//parent::div//parent::div//div[2]//label//span[@class='lever']"))
 		.click();
 		WebElement element = driver.findElement(By.xpath("//a[@title='SAVE APP ROLE']"));
 		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
@@ -60,7 +63,7 @@ public class LoginPage {
 	public void logOut() throws InterruptedException {
 		driver.findElement(By.xpath("//a[@data"
 				+ "-target='setting_SideBar_out']")).click();
-		Thread.sleep(2000);
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//li[@title='Logout']")));
 		driver.findElement(By.xpath("//li[@title='Logout']")).click();
 	}
 
@@ -78,5 +81,13 @@ public class LoginPage {
 	public Timeouts changeWaitTime(int duration)
 	{
 		return driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(duration));
+	}
+
+	public void loginWithParameter(String username1, String password1) {
+		// TODO Auto-generated method stub
+		driver.findElement(username).sendKeys(username1);
+		driver.findElement(password).sendKeys(password1);
+		driver.findElement(loginButton).click();
+		
 	}
 }

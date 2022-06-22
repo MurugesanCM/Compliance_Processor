@@ -1,16 +1,18 @@
-package EHUB.GHR_CreateEmployee;
+package compliance_client_compliance_processor;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import Resources.BaseClass;
 @Test
-public class CreateEmployee extends BaseClass {
+public class getFilteredDataCount extends BaseClass {
 
 	public WebDriver driver;
 
@@ -18,50 +20,38 @@ public class CreateEmployee extends BaseClass {
 	public void createEmployee() throws IOException, InterruptedException {
 		// Start Chromedriver
 		driver = initializeDriver();
-		// Get the necessary values from properties File
-		String country = "India";
-		String legalEntity = "Neeyamo Enterprise Solutions";
 		// Enter URL
 		login.URL("UAT");
 		// Type User name,Password and click on login
         login.login();
-		// Switch to GHR Role
-		wait.until(ExpectedConditions.visibilityOf(neosuite.OpenEhubApplication()));
-		login.switchToGHRRole();
-		wait.until(ExpectedConditions.stalenessOf(neosuite.OpenEhubApplication()));
-		// Open EHUB Application
-		neosuite.OpenEhubApplication().click();
-		// Wait for the visibility of the Employee Creation ICON.
-		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[.='Employee']//parent::div//i")));
-		// Click on the employee creation ICON
-		hubhome.ehubIcon().click();
-		// Click on HIRE Form
-		hubhome.ClickOnForm("HIRE").click();
-		login.changeWaitTime(3);
-		try{hubhome.clickOnCountryFilter();}
-		catch(Exception e)
-		{hubhome.CreateNewDraft().click();}
-		login.changeWaitTime(30);
-		// Select the Country
-		hubhome.clickOnCountryFilter().sendKeys(country);
-		hubhome.selectValueFromFilter(country).click();
-		// Select the legal entity
-		hubhome.clickOnlegalEntityFilter().sendKeys(legalEntity);
-		hubhome.selectValueFromFilter(legalEntity).click();
-		// Click on Tick button to filter the selection.
-		hubhome.clickOnTickButton("TickButton").click();
-		// Click on Edit Form
-		hubhome.clickOnEditButton().click();
-		// Fill all the mandatory fields
-		hubhome.selectfield("Preferred Name").sendKeys("Murugesan");
-		hubhome.selectfield("Title").click();
-		hubhome.selectDrpdwnValue("Mr").click();
-		// Click on save button
-		hubhome.saveButton().click();
-		hubhome.saveButton().click();
+		// Switch to Processor Role
+		wait.until(ExpectedConditions.visibilityOf(neosuite.OpenComplianceApplication()));
+		login.switchRole("Compliance Client", "Compliance Processor");
+		wait.until(ExpectedConditions.stalenessOf(neosuite.OpenComplianceApplication()));
+		neosuite.OpenComplianceApplication().click();
+		wait.until(ExpectedConditions.visibilityOf(activityHome.activityView()));
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[.='Total Penalties Paid']")));
+		activityHome.activityView().click();
+		activityHome.clickOnApplyFilter().click();
+		generalFunction.scrollIntoView(activityHome.clickOnSelectStatusInApplyFilter());
+		activityHome.clickOnSelectStatusInApplyFilter().click();
+		activityHome.selectDrpdwnValue("Open").click();
+		activityHome.clickOnApplyButton().click();
+		wait.until(ExpectedConditions.visibilityOfAllElements(activityHome.getElementsWithStatus("Open")));
+		String[] Values = activityHome.getListViewCount();
+		int initialCount = Integer.valueOf(Values[1]);
+		int totalCount=Integer.valueOf(Values[3]);
+		int noOfPages = totalCount/initialCount;
+		int statusCount=0;
+		for(int i = 0;i<noOfPages;i++)
+		{
+			driver.findElement(By.xpath("//text()[.=' > ']//parent::a")).click();
+			List<WebElement> status = activityHome.getElementsWithStatus("Open");
+			statusCount = status.size();
+			initialCount = statusCount + initialCount;
+		}
 		// Verify whether the functionality is working.
-		String popup = neosuite.popUp().getText();
-		Assert.assertEquals(popup, "Saved successfully");
-		driver.quit();
+		Assert.assertEquals(totalCount, initialCount);
+		driver.close();
 	}
 }
